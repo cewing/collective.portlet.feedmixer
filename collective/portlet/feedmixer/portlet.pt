@@ -1,5 +1,7 @@
 <dl class="portlet portletfeedmixer"
-    i18n:domain="collective.portlet.feedmixer">
+    i18n:domain="collective.portlet.feedmixer"
+    tal:define="merged view/data/merge_feeds;
+                toLocalizedTime nocall:context/@@plone/toLocalizedTime">
 
     <dt class="portletHeader">
         <span class="portletTopLeft"></span>
@@ -8,25 +10,31 @@
         </span>
         <span class="portletTopRight"></span>
     </dt>
+    
+    <tal:entryset
+        tal:repeat="set view/entries">
+      <dd class="portletItem feedHeader"
+          tal:condition="not:merged"
+          tal:content="set/title">[Unmerged Blog Title]
+      </dd>
+     <tal:entry
+         tal:repeat="entry set/entries">
+      <dd class="portletItem"
+          tal:define="oddrow repeat/entry/odd"
+          tal:attributes="class python:oddrow and 'portletItem even' or 'portletItem odd'">
 
-    <tal:entry
-        tal:define="toLocalizedTime nocall:context/@@plone/toLocalizedTime"
-        tal:repeat="entry view/entries">
-        <dd class="portletItem"
-            tal:define="oddrow repeat/entry/odd"
-            tal:attributes="class python:oddrow and 'portletItem even' or 'portletItem odd'">
-
-            <a href=""
-               tal:attributes="href entry/link;
-                               title entry/title">
-                <span tal:replace="structure entry/title">Title</span>
-                <span class="portletItemDetails"
-                    tal:content="python:toLocalizedTime(entry['updated'])">
-                    Nov 1
-                </span>
-            </a>
-        </dd>
-    </tal:entry>
+        <a href=""
+           tal:attributes="href entry/link;
+                           title entry/title">
+            <span tal:replace="structure entry/title">Title</span>
+            <span class="portletItemDetails"
+                tal:content="python:toLocalizedTime(entry['updated'])">
+                Nov 1
+            </span>
+        </a>
+      </dd>
+     </tal:entry>
+    </tal:entryset>
     
     <dd class="portletFooter">
       <a href="#"

@@ -16,7 +16,6 @@ from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from collective.portlet.feedmixer.interfaces import IFeedMixer
 
 
-
 class Assignment(base.Assignment):
     """Portlet assignment.
 
@@ -29,15 +28,17 @@ class Assignment(base.Assignment):
     feeds = u""
     items_shown = 5
     cache_timeout = "900"
+    merge_feeds = True
     assignment_context_path = None
 
     def __init__(self, title=title, feeds=feeds, items_shown=items_shown,
-                 cache_timeout=cache_timeout,
+                 cache_timeout=cache_timeout, merge_feeds=merge_feeds,
                  assignment_context_path=assignment_context_path):
         self.title=title
         self.feeds=feeds
         self.items_shown=items_shown
         self.cache_timeout=cache_timeout
+        self.merge_feeds=merge_feeds
         self.assignment_context_path = assignment_context_path
 
     @property
@@ -74,7 +75,6 @@ class Assignment(base.Assignment):
 
         chooser=getUtility(ICacheChooser)
         cache=chooser("collective.portlet.feedmixer.FeedCache")
-
         cached_data=cache.get(url, None)
         cache_timeout = int(self.cache_timeout)
         if cached_data is not None:
@@ -98,13 +98,21 @@ class Assignment(base.Assignment):
 
 
     def mergeEntriesFromFeeds(self, feeds):
+        entries = []
+        import pdb; pdb.set_trace( )
         if not feeds:
-            return []
-        if len(feeds)==1:
-            return feeds[0].entries
+            return entries
 
-        entries=list(itertools.chain(*(feed.entries for feed in feeds)))
-        entries.sort(key=lambda x: x["published_parsed"], reverse=True)
+        if self.data.merge_feeds:
+            all_entries=list(itertools.chain(*(feed.entries for feed in feeds)))
+            all_entries.sort(key=lambda x: x["published_parsed"], reverse=True)
+            title = u''
+            entries.append({'title': title, 'entries': all_entries})
+        else:
+            for feed in feeds:
+                title = feed.feed.title
+                these_entries = feed.entries
+                entries.append({'title': title, 'entries': these_entries})
 
         return entries
 
@@ -114,7 +122,7 @@ class Assignment(base.Assignment):
     def entries(self):
         feeds=[self.getFeed(url) for url in self.data.feed_urls]
         feeds=[feed for feed in feeds if feed is not None]
-        entries=self.mergeEntriesFromFeeds(feeds)
+        entries = self.mergeEntriesFromFeeds(feeds)
         return entries
 
 
@@ -133,7 +141,10 @@ class Renderer(base.Renderer):
 
     @property
     def entries(self):
-        return self.data.entries()[:self.data.items_shown]
+        all_entries = self.data.entries()
+        for entry in all_entries:
+            entry['entries'] = entry['entries'][:self.data.items_shown]
+        return all_entries
 
     @property
     def more_url(self):

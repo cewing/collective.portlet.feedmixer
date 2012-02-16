@@ -35,7 +35,8 @@ class IFeedMixer(IPortletDataProvider):
             title=_(u"heading_items_shown",
                 default=u"Number of items to display"),
             description=_(u"description_items_shown",
-                default=u""),
+                default=u"If you choose not to merge feeds, this number will "
+                        u"apply to each separate feed"),
             default=5,
             required=True)
 

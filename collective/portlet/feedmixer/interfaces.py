@@ -49,6 +49,15 @@ class IFeedMixer(IPortletDataProvider):
             required=True,
             constraint=isUrlList)
 
+    merge_feeds = schema.Bool(
+            title=_(u"heading_merge_feeds",
+                default=u"Merge Feeds"),
+            description=_(u"description_merge_feeds",
+                default=u"Posts from individual feeds will be merged into one"
+                        u"list (if not, they will be presented as categories)"),
+            required=True,
+            default=True)
+
     def entries():
         """Return feed entries for all feeds.
 

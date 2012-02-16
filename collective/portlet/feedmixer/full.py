@@ -9,3 +9,7 @@ class FullFeedView(BrowserView):
     @property
     def entries(self):
         return self.aq_acquire('context').entries
+
+    @property
+    def merge_feeds(self):
+        return self.aq_acquire('context').data.merge_feeds

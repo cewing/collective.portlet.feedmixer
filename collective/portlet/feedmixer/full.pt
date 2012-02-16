@@ -20,40 +20,49 @@
 
     <div tal:replace="structure provider:plone.abovecontentbody" />
 
-    <div class="feedEntry"
-        tal:define="toLocalizedTime nocall:context/@@plone/toLocalizedTime"
-        tal:repeat="entry view/entries">
+    <tal:feeds 
+        tal:define="toLocalizedTime nocall:context/@@plone/toLocalizedTime;
+                    merged view/merge_feeds">
+      <div class="feed" tal:repeat="set view/entries">
+        <div class="feedHeader"
+             tal:condition="not:merged">
+          <h2 class="feedTitle" tal:content="set/title">Feed Title</h2>
+        </div>
+        <div class="feedEntry"
+            tal:repeat="entry set/entries">
 
-        <a href=""
-           tal:attributes="href entry/link;
-                           title entry/title">
-            <h2 tal:content="structure entry/title">
-                Feed Entry Title
-            </h2>
-        </a>
+            <a href=""
+               tal:attributes="href entry/link;
+                               title entry/title">
+                <h2 tal:content="structure entry/title">
+                    Feed Entry Title
+                </h2>
+            </a>
 
-        <p class="discreet">
-            <span tal:condition="exists:entry/author"
-                  tal:omit-tag=""
-                  i18n:translate="feed_entry_author">
-                  By <span i18n:name="author" tal:replace="entry/author">someone.</span><tal:block condition="exists:entry/feed/title"> from <span i18n:name="feed_title" tal:replace="structure entry/feed/title"> feed title</span></tal:block>.
-            </span>
-            <span tal:condition="python:'author' not in entry and 'title' in entry['feed']"
-                  tal:omit-tag=""
-                  i18n:translate="feed_entry_no_author">
-                  From <span i18n:name="feed_title" tal:replace="structure entry/feed/title">feed title</span>.
-            </span>
-            <span tal:omit-tag="" i18n:translate="feed_entry_modified">
-                Published on <span name="publication_time"
-                    tal:content="python:toLocalizedTime(entry['updated'])">
-                    Nov 1</span>.
-            </span>
-        </p>
+            <p class="discreet">
+                <span tal:condition="exists:entry/author"
+                      tal:omit-tag=""
+                      i18n:translate="feed_entry_author">
+                      By <span i18n:name="author" tal:replace="entry/author">someone.</span><tal:block condition="exists:entry/feed/title"> from <span i18n:name="feed_title" tal:replace="structure entry/feed/title"> feed title</span></tal:block>.
+                </span>
+                <span tal:condition="python:'author' not in entry and 'title' in entry['feed']"
+                      tal:omit-tag=""
+                      i18n:translate="feed_entry_no_author">
+                      From <span i18n:name="feed_title" tal:replace="structure entry/feed/title">feed title</span>.
+                </span>
+                <span tal:omit-tag="" i18n:translate="feed_entry_modified">
+                    Published on <span name="publication_time"
+                        tal:content="python:toLocalizedTime(entry['updated'])">
+                        Nov 1</span>.
+                </span>
+            </p>
 
-        <p tal:replace="structure entry/description|nothing">
-           This is the entry description itself
-       </p>
-    </div>
+            <p tal:replace="structure entry/description|nothing">
+               This is the entry description itself
+           </p>
+        </div>
+      </div>
+    </tal:feeds>
 
     <div tal:replace="structure provider:plone.belowcontentbody" />
 </metal:main>

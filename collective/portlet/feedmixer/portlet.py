@@ -99,7 +99,6 @@ class Assignment(base.Assignment):
 
     def mergeEntriesFromFeeds(self, feeds):
         entries = []
-        import pdb; pdb.set_trace( )
         if not feeds:
             return entries
 

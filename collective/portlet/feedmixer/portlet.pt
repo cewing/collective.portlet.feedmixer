@@ -1,6 +1,7 @@
 <dl class="portlet portletfeedmixer"
     i18n:domain="collective.portlet.feedmixer"
     tal:define="merged view/data/merge_feeds;
+                show_comments view/data/show_comments;
                 toLocalizedTime nocall:context/@@plone/toLocalizedTime">
 
     <dt class="portletHeader">
@@ -20,17 +21,26 @@
      <tal:entry
          tal:repeat="entry set/entries">
       <dd class="portletItem"
-          tal:define="oddrow repeat/entry/odd"
+          tal:define="oddrow repeat/entry/odd;
+                      has_comments python:show_comments and 'slash_comments' in entry"
           tal:attributes="class python:oddrow and 'portletItem even' or 'portletItem odd'">
 
         <a href=""
            tal:attributes="href entry/link;
                            title entry/title">
             <span tal:replace="structure entry/title">Title</span>
-            <span class="portletItemDetails"
-                tal:content="python:toLocalizedTime(entry['updated'])">
+            <span class="portletItemDetails">
+              <span tal:replace="python:toLocalizedTime(entry['updated'])">
                 Nov 1
+              </span>
+             <tal:has-comments tal:condition="has_comments">
+              <span class="entryComments"
+                    tal:define="comments entry/slash_comments;
+                                content string:(${comments} comments)"
+                    tal:content="content">[Entry Comment Count]</span>
+             </tal:has-comments>
             </span>
+            
         </a>
       </dd>
      </tal:entry>

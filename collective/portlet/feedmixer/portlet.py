@@ -29,16 +29,19 @@ class Assignment(base.Assignment):
     items_shown = 5
     cache_timeout = "900"
     merge_feeds = True
+    show_comments = False
     assignment_context_path = None
 
     def __init__(self, title=title, feeds=feeds, items_shown=items_shown,
                  cache_timeout=cache_timeout, merge_feeds=merge_feeds,
+                 show_comments=show_comments,
                  assignment_context_path=assignment_context_path):
         self.title=title
         self.feeds=feeds
         self.items_shown=items_shown
         self.cache_timeout=cache_timeout
         self.merge_feeds=merge_feeds
+        self.show_comments=show_comments
         self.assignment_context_path = assignment_context_path
 
     @property

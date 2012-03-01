@@ -54,10 +54,19 @@ class IFeedMixer(IPortletDataProvider):
             title=_(u"heading_merge_feeds",
                 default=u"Merge Feeds"),
             description=_(u"description_merge_feeds",
-                default=u"Posts from individual feeds will be merged into one"
-                        u"list (if not, they will be presented as categories)"),
+                default=u"Posts from all feeds will be merged into one list "
+                        u"(if not, they will be presented as categories)"),
             required=True,
             default=True)
+
+    show_comments = schema.Bool(
+            title=_(u"heading_show_comments",
+                default=u"Show comment counts"),
+            description=_(u"description_show_comments",
+                default=u"Display the number of comments for individual posts"
+                        u" (uses <slash:comments> if present)"),
+            required=True,
+            default=False)
 
     def entries():
         """Return feed entries for all feeds.

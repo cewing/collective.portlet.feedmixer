@@ -95,6 +95,17 @@ URL(s) for all feeds
   A list of URLs for all feeds. All standard RSS and Atom feeds are
   supported as well as CDF feeds.
 
+Option to show feeds merged or separately
+  If feeds are displayed separately, the title of each feed will be displayed
+  before the list of items from the feed.  Additionally, the setting for 
+  number of items to display will apply to each feed individually.
+
+Option to show comment counts for entries
+  If enabled, each entry will be displayed along with the number of comments.
+  This feature is dependent on the presence of the slash:comments element in 
+  the feed.  If this element is not present, then no count will be shown, 
+  regardless of the setting.
+
 
 Performance
 ===========
